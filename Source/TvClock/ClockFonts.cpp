@@ -256,8 +256,8 @@ font_vec_t SecondaryFonts =
     {&FreeSansOblique18pt7b,     "Sans Oblique",    false, SansObliqueIcon },
     {&FreeSerif18pt7b,           "Serif",           false, SerifIcon },
     {&FreeSerifBold18pt7b,       "Serif Bold",      false, SerifBoldIcon },
-    {&FreeSerifBoldItalic18pt7b, "Serif Bold Ital", false, SerifBoldItalicIcon },
-    {&FreeSerifItalic18pt7b,     "Serif Italic",    true,  SerifItalicIcon }
+    {&FreeSerifBoldItalic18pt7b, "Serif Bold Ital", true,  SerifBoldItalicIcon },
+    {&FreeSerifItalic18pt7b,     "Serif Italic",    false, SerifItalicIcon }
 }; // End SecondaryFonts.
 
 
@@ -276,8 +276,8 @@ font_vec_t TertiaryFonts =
     {&FreeSansOblique9pt7b,      "Sans Oblique",    false, SansObliqueIcon },
     {&FreeSerif9pt7b,            "Serif",           false, SerifIcon },
     {&FreeSerifBold9pt7b,        "Serif Bold",      false, SerifBoldIcon },
-    {&FreeSerifBoldItalic9pt7b,  "Serif Bold Ital", false, SerifBoldItalicIcon },
-    {&FreeSerifItalic9pt7b,      "Serif Italic",    true,  SerifItalicIcon }
+    {&FreeSerifBoldItalic9pt7b,  "Serif Bold Ital", true,  SerifBoldItalicIcon },
+    {&FreeSerifItalic9pt7b,      "Serif Italic",    false, SerifItalicIcon }
 }; // Ennd TertiaryFonts.
 
 
