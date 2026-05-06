@@ -7,6 +7,9 @@
 * will probably not be a problem.  In this case, use the "ClockExtendedIcons.h"
 * file instead.  Its icons represent "12:59".
 *
+* It also contains X64 encoded icon strings for the minor faults used by the
+* clock.  These icons are reoresebted as "Monday".
+*
 *-------------------------------------------------------------------------------
 *
 * The procedure to create these icon X64 strings was:

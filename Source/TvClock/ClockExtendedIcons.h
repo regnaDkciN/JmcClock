@@ -6,6 +6,9 @@
 * memory size not is a problem.  In this case, use the "ClockIcons.h"
 * file instead.  Its icons represent "12".
 *
+* It also contains X64 encoded icon strings for the minor faults used by the
+* clock.  These icons are reoresebted as "Monday".
+*
 *-------------------------------------------------------------------------------
 *
 * The procedure to create these icon X64 strings was:
