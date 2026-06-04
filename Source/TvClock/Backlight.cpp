@@ -169,7 +169,7 @@ void Backlight::AdjustBrightness() const
         // Calculate the filterd LDR value and map it to the corresponding
         // backlight value.
         avg = (z * ldrf) + (1.0 - z) * avg;
-        int16_t mapped = map((int)avg, 5, 950, MAX_BRIGHTNESS, 1);
+        int16_t mapped = map((int)avg, 5, 1020, 1, MAX_BRIGHTNESS);
         mapped += m_Brightness;
         analogValue = constrain(mapped, 1, MAX_BRIGHTNESS);
     }

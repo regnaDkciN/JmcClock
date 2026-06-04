@@ -43,8 +43,8 @@
 *           Y+ A1
 *           Y- GPIO 11
 *   - DS3231 Real Time Clock (RTC) module. https://www.adafruit.com/product/3013
-*           SDA  GPIO 4
-*           SCL  GPIO 5
+*           SDA  I2C0 SDA (GPIO 4)
+*           SCL  I2C0 SCL (GPIO 5)
 *   - LDR with 10K resistor uses analog pin A2.
 *
 * A future enhancement may include the DFRobot SEN0539-EN voice input module:
@@ -289,7 +289,7 @@ void setup()
 
     // Initialise the display.
     gTft.begin();
-    gTft.setRotation(1);            // Set to first landscape display.
+    gTft.setRotation(3);            // Set to first landscape display.
     gCanvas.setFont();              // Set default font.
     gCanvas.setTextWrap(false);     // We don't want the deisplay to wrap.
     gTft.fillScreen(ILI9341_BLUE);  // Fill the screen with a background color.
