@@ -4,6 +4,8 @@
 * Displays a background screen and welcome information for the TV Clock.
 *
 * History:
+*   09-JUN-2026 JMC
+*      Changed welcome strimg from "JMC Clock" to "TV Clock".
 *   16-JAN-2026 JMC
 *      Start.
 *
@@ -735,7 +737,7 @@ static void ScrollFromRight(GFXcanvas16 &rBgCanvas, const char *pTxt,
 *******************************************************************************/
 void ClockWelcome::ShowWelcome()
 {
-    const char   *pWelcomeString   = "JMC  CLOCK";
+    const char   *pWelcomeString   = "TV  CLOCK";
     const char   *pCopyrightString = "Copyright (c) 2026, J. M. Corbett";
     const int16_t welcomeYOffset   = 70;
     const int16_t copyrightYOffset = 190;

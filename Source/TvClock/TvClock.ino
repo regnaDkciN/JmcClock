@@ -55,6 +55,8 @@
 *   May need 10K pullups.
 *
 * History:
+*   04-HUN-2026 JMV
+*      Changed TFT rotation from 1 to 3 to match case setup. Minor commennt fixes.
 *   16-JAN-2026 JMC
 *      Start.
 *

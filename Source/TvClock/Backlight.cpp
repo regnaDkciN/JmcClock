@@ -11,6 +11,10 @@
 * brightness.
 *
 * History:
+*   09-JUN-2026 JMC
+*      Changed limits of LDR readings to better match hardware setup.
+*   04-JUN-2025 JMC
+*      Reversed sense of LDR readings due to re-wiring of the sensor.
 *   24-APR-2026 JMC
 *      Start.
 *
@@ -150,6 +154,12 @@ void Backlight::UseLdr(bool use)
 *******************************************************************************/
 void Backlight::AdjustBrightness() const
 {
+    // These values represent the minimum and maximum values read from the LDR
+    // when minimum and maximum light are seen respectively.  These values will
+    // probably differ with different hardware, and should be adjusted as needed.
+    const int16_t LDR_MIN = 9;
+    const int16_t LDR_MAX = 998;
+
     int16_t analogValue = m_Brightness;
     // Are we using an LDR?
     if (IsLdrUsed())
@@ -169,7 +179,7 @@ void Backlight::AdjustBrightness() const
         // Calculate the filterd LDR value and map it to the corresponding
         // backlight value.
         avg = (z * ldrf) + (1.0 - z) * avg;
-        int16_t mapped = map((int)avg, 5, 1020, 1, MAX_BRIGHTNESS);
+        int16_t mapped = map((int)avg, LDR_MIN, LDR_MAX, 1, MAX_BRIGHTNESS);
         mapped += m_Brightness;
         analogValue = constrain(mapped, 1, MAX_BRIGHTNESS);
     }

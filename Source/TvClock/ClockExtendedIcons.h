@@ -4,10 +4,10 @@
 * This file contains the X64 encoded icon strings for the main fonts used by
 * the clock.  These particular icons all represent "12:59".  Use this file if
 * memory size not is a problem.  In this case, use the "ClockIcons.h"
-* file instead.  Its icons represent "12".
+* file instead.  Its icons represent "12:59".
 *
 * It also contains X64 encoded icon strings for the minor faults used by the
-* clock.  These icons are reoresebted as "Monday".
+* clock.  These icons are represented as "Monday".
 *
 *-------------------------------------------------------------------------------
 *
@@ -40,6 +40,8 @@
 *-------------------------------------------------------------------------------
 *
 * History:
+*   09-JUN-2026 JMC
+*      Minor comment fixes.
 *   24-APR-2026 JMC
 *      Start.
 *

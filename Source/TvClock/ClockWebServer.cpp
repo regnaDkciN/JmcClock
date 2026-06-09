@@ -4,6 +4,12 @@
 * Implements the server side web interface for the clock.
 *
 * History:
+*   09-JUN-2026 JMC
+*      - Renamed server from JmcClock to TvClock.
+*      - Added missing font cycling period setting.
+*      - Added next font and previous font selection buttons.
+*      - Added current font update.
+*      - Minor comment fixes.
 *   16-JAN-2026 JMC
 *      Start.
 *
@@ -34,9 +40,9 @@
 #include "ClockWiFi.h"      // For WiFiConnected().
 #include "ClockNvs.h"       // For NVS save/restore.
 
-// ClockWebServer.h contains some declarations that are used by several 
+// ClockWebServer.h contains some declarations that are used by several
 // subsystems.  It also contains our web page strings that only this subsystem
-// should see.  The following is defined before including ClockWebServer.h so 
+// should see.  The following is defined before including ClockWebServer.h so
 // that we can see the web page strings.  Other subsystems should not define
 // DEFINE_CLOCK_WEB_PAGES.
 #define DEFINE_CLOCK_WEB_PAGES
@@ -44,7 +50,7 @@
 
 // Create out locally global objects and constants.
 static WebServer gServer(80);
-static const char *gNetworkServerName = "JmcClock";
+static const char *gNetworkServerName = "TvClock";
 static const size_t gNumMainFontsPerTx = 4;
 static const size_t gNumSecFontsPerTx = 2;
 
@@ -206,7 +212,7 @@ static void UpdateTimeOptsData()
         gTd.ShowTemp((int)doc["temp"]);
         gTd.ShowDegreesF((int)doc["degrees"]);
         gBacklight.UseLdr((int)doc["auto"]);
-        
+
         // Update the brightness.
         int brightness = (int)doc["brite"];
         brightness *= gBacklight.GetRange();
@@ -349,7 +355,12 @@ static void SendFontsData()
     String http = "http://";
     String id = gNetworkServerName;
     doc["WEB_ID"] = http + id;
-    
+
+    // FONT CYCLE PERIOD
+    doc["FONT_PERIOD"] = gTd.FontCycle();
+    doc["FONT_INDEX"]  = TimeMainFonts.Index();
+    doc["FONT_NAME"]   = TimeMainFonts.Name();
+
     // CURRENT FONT DATA
     doc["NUM_MAIN_FONTS_PER_TX"] = gNumMainFontsPerTx;
     doc["NUM_SEC_FONTS_PER_TX"] = gNumSecFontsPerTx;
@@ -389,16 +400,16 @@ static void SendMainFont()
         doc.clear();
         // Start an array of font data.
         JsonArray table = doc["MFTABLE"].to<JsonArray>();
-        
-        // Send fonts data until the end of the font list, or until 
+
+        // Send fonts data until the end of the font list, or until
         // gNumMainFontsPerTx fonts have been sent.
         for (size_t i = 0; (i < gNumMainFontsPerTx) &&
                            (i + startIndex < TimeMainFonts.NumFonts()); i++)
         {
             size_t curIndex = i + startIndex;
             JsonObject obj = table.add<JsonObject>();
-            obj["INDEX"]    = curIndex;
-            obj["FONTNAME"] = (*pFonts)[curIndex].m_pName;
+            obj["FONT_INDEX"]    = curIndex;
+            obj["FONT_NAME"] = (*pFonts)[curIndex].m_pName;
             obj["CHECKED"]  = (*pFonts)[curIndex].m_Active ? " checked " : " ";
             obj["ICON"]     = (*pFonts)[curIndex].m_Icon;
         }
@@ -413,7 +424,7 @@ static void SendMainFont()
 * SendSecFont()
 *
 * Called when the client requests the secondary font list.  The client requests
-* fonts starting with a specific index.  This function sends up to 
+* fonts starting with a specific index.  This function sends up to
 * gNumSecFontsPerTx number of secondary fonts starting with the requested font.
 *******************************************************************************/
 static void SendSecFont()
@@ -438,16 +449,16 @@ static void SendSecFont()
         doc.clear();
         // Start an array of font data.
         JsonArray table = doc["SFTABLE"].to<JsonArray>();
-        
-        // Send fonts data until the end of the font list, or until 
+
+        // Send fonts data until the end of the font list, or until
         // gNumSecFontsPerTx fonts have been sent.
         for (size_t i = 0; (i < gNumSecFontsPerTx) &&
                            (i + startIndex < TimeSecondaryFonts.NumFonts()); i++)
         {
             size_t curIndex = i + startIndex;
             JsonObject obj = table.add<JsonObject>();
-            obj["INDEX"]    = curIndex;
-            obj["FONTNAME"] = (*pFonts)[curIndex].m_pName;
+            obj["FONT_INDEX"]    = curIndex;
+            obj["FONT_NAME"] = (*pFonts)[curIndex].m_pName;
             obj["CHECKED"]  = (*pFonts)[curIndex].m_Active ? " checked " : " ";
             obj["ICON"]     = (*pFonts)[curIndex].m_Icon;
         }
@@ -455,7 +466,28 @@ static void SendSecFont()
 
     serializeJson(doc, webPage);
     gServer.send(response, "text/html", webPage);
-} // End SendMainFont().
+} // End SendSecFont().
+
+
+/*******************************************************************************
+* SendCurrentFont()
+*
+* Called when the client requests the currently displayed font information.
+*******************************************************************************/
+static void SendCurrentFont()
+{
+    String webPage;
+    JsonDocument doc;
+
+    // CURRENT FONT DATA
+    noInterrupts();
+    doc["FONT_INDEX"]    = TimeMainFonts.Index();
+    doc["FONT_NAME"] = TimeMainFonts.Name();
+    interrupts();
+
+    serializeJson(doc, webPage);
+    gServer.send(200, "text/html", webPage);
+} // End SendCurrentFont().
 
 
 /*******************************************************************************
@@ -512,6 +544,68 @@ static void UpdateFontsData()
 } // End UpdateFontsData().
 
 
+/*******************************************************************************
+* SetNextFont()
+*
+* Called when the client wants to bump the main font to the next active font.
+*******************************************************************************/
+static void SetNextFont()
+{
+    TimeMainFonts.NextActiveFont();
+    SendCurrentFont();
+} // End SetNextFont().
+
+
+/*******************************************************************************
+* SetPrevFont()
+*
+* Called when the client wants to bump the main font to the previous active font.
+*******************************************************************************/
+static void SetPrevFont()
+{
+    TimeMainFonts.PrevActiveFont();
+    SendCurrentFont();
+} // End SetPrevFont().
+
+
+/*******************************************************************************
+* RefreshCurrentFont()
+*
+* Called when the client wants to find out which main font is currently displayed.
+*******************************************************************************/
+static void RefreshCurrentFont()
+{
+    SendCurrentFont();
+} // End RefreshCurrentFont().
+
+
+/*******************************************************************************
+* SetFontPeriod()
+*
+* Called when the client wants to change the main font cycle period.
+*******************************************************************************/
+static void SetFontPeriod()
+{
+    uint16_t response = 200;    // Assume OK response.
+    JsonDocument doc;
+    DeserializationError error = deserializeJson(doc, gServer.arg("plain"));
+    if (error)
+    {
+        Serial.print("deserializeJson() failed with code ");
+        Serial.println(error.c_str());
+        response = 400; // BAD REQUEST response.
+    }
+    else
+    {
+        // Update font period.
+        gTd.SetFontCycle((FontCycleTime)(int)doc["fontPeriod"]);
+    }
+
+    // Send a response to the client.
+    gServer.send(response, "text/html");
+} // End SetFontPeriod().
+
+
 
 /*******************************************************************************
 ********************************************************************************
@@ -546,7 +640,7 @@ static void SendTzData()
     String http = "http://";
     String id = gNetworkServerName;
     doc["WEB_ID"] = http + id;
-    
+
     // TIME ZONE DATA
     doc["BY_CITY"] = (ClockTz::CurTzSortType == ClockTz::SORT_ALPHA);
     doc["CUR_TZ"] = ClockTz::ActiveTzId;
@@ -874,6 +968,10 @@ void InitClockWebServer()
         gServer.on("/updateFontsData", UpdateFontsData);
         gServer.on("/getMainFont", SendMainFont);
         gServer.on("/getSecFont", SendSecFont);
+        gServer.on("/setNextFont", SetNextFont);
+        gServer.on("/setPrevFont", SetPrevFont);
+        gServer.on("/updateFontPeriod", SetFontPeriod);
+        gServer.on("/refreshCurrentFont", RefreshCurrentFont);
 
         gServer.on("/timezone", ShowTzPage);
         gServer.on("/getTzTable", SendTzTable);
@@ -900,7 +998,7 @@ void InitClockWebServer()
 
 
 /*******************************************************************************
-* InitClockWebServer()
+* HandleClockWebServer()
 *
 * Called repeatedly in the Arduino loop() to service the web interface.
 * This function is exposed globally.

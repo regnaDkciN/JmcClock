@@ -8,6 +8,12 @@
 *       any of this code as a basis for anything useful.
 *
 * History:
+*   09-JUN-2026 JMC
+*      - Added missing font cycling period setting.
+*      - Added next font and previous font selection buttons.
+*      - Added current font update.
+*      - Made border use consistent.
+*      - Minor comment fixes.
 *   16-JAN-2026 JMC
 *      Start.
 *
@@ -579,7 +585,7 @@ const char gClockColorsPage[] = R"=====(
             <label class="form-check-label" for="idFixed"></label>
           </div>
         </div>
-        <div class="container col-sm-12 p-1" id="idPeriodLabel">
+        <div class="container col-sm-12 p-1 border" id="idPeriodLabel">
           <label for="idPeriod" class="form-label my-3">Cycle Period - Time to complete one color cycle.</label>
           <input type="range" class="form-range w-60" min="10" max="3590" step="10" value="360" id="idPeriod">
           <output for="idPeriod" id="idPeriodValue" aria-hidden="true"></output>
@@ -1017,7 +1023,7 @@ const char gTimezonePage[] = R"=====(
       console.log(json);
     }
 
-    // Update the clock settings page display.
+    // Update the timezone page display.
     function updateTzSettings(xhttp) {
       let json = JSON.parse(xhttp.responseText);
 
@@ -1106,18 +1112,41 @@ const char gFontsPage[] = R"=====(
         <div class="container col-sm-6 p-1"></div>
       </div>
 
-      <div class="container-flex col-sm-12 p-1 my-3">
+      <div class="container-flex col-sm-6 p-1 my-3 border">
+        <h5 id="idCurrentFont"></h5>
+        <button class="btn btn-primary" onclick="prevFont()">Previous Font</button>
+        <button class="btn btn-primary" onclick="nextFont()">Next Font</button>
+      </div>
+
+      <div class="container-flex col-sm-12 p-1 my-3 border">
         <h5>Select Main Fonts <span style="font-size:14px;"> (Select At Least One)</span></h5>
         <button class="btn btn-primary" onclick="setAll()">Select All</button>
         <button class="btn btn-primary" onclick="clearAll()">Clear All (But One)</button>
-        <div class="checkbox-container container-flex col-sm-12 my-4 mx-1 border" id="idMainFonts" onclick="putFontData()"></div>
+        <div class="checkbox-container container-flex col-sm-12 my-4 mx-1" id="idMainFonts" onclick="putFontData()"></div>
       </div>
 
-      <div class="container-flex col-sm-12 p-1 my-3">
+      <div class="container-flex col-sm-6 p-1 my-3 border">
         <h5>Select Secondary Fonts<span style="font-size:14px;"> (Select Only One)</span></h5>
-        <div class="container-flex col-sm-12 my-4 mx-1 border" id="idSecFonts" onclick="putFontData()"></div>
+        <div class="container-flex col-sm-12 my-4 mx-1" id="idSecFonts" onclick="putFontData()"></div>
+      </div>
+
+      <div class="container-flex col-sm-6 p-1 my-3 border">
+        <h5>Select Main Font Cycle Period</h5>
+        <div class="container-flex col-sm-6" onchange="putFontPeriod()">
+          <select class="form-select" id="idFontPeriod">
+            <option value='0'>Never</option>
+            <option value='1'>Every Second</option>
+            <option value='2'>Every Minute</option>
+            <option value='3'>Every Hour</option>
+            <option value='4'>Every Day</option>
+            <option value='5'>Every Week</option>
+            <option value='6'>Every Month</option>
+            <option value='7'>Every Year</option>
+          </select>
+        </div>
       </div>
     </div>
+
   </body>
 
   <script>
@@ -1127,6 +1156,7 @@ const char gFontsPage[] = R"=====(
     let mainFontsPerTx = 0;
     let secFontsLength = 0;
     let secFontsPerTx = 0;
+    let curFontIndex = 0;
 
     // Start the main page.  It will continue on its own.
     (function triggerMainPage() {
@@ -1135,6 +1165,7 @@ const char gFontsPage[] = R"=====(
       loadDoc("/getFontsData", updateFontSettings);
       createMainFonts();
       createSecFonts();
+      setInterval(refreshCurrentFont, 1000);
     })();
 
     // Load a selected url followed by calling a specified function.
@@ -1239,14 +1270,14 @@ const char gFontsPage[] = R"=====(
     function createMainFontEntry(json ) {
       let s = "";
       for (let i = 0; (i < mainFontsPerTx); i++) {
-        let name = json.MFTABLE[i].FONTNAME;
+        let name = json.MFTABLE[i].FONT_NAME;
         let checked = json.MFTABLE[i].CHECKED;
         let icon = json.MFTABLE[i].ICON;
-        let index = json.MFTABLE[i].INDEX;
+        let index = json.MFTABLE[i].FONT_INDEX;
 
         s += '<div class="form-check col-sm-3">'
         s += '<input class="form-check-input" ' + checked + ' type="checkbox" id="' + index + '">';
-        s += '<label class="form-check-label" for="' + index + '"><img src="data:image/png;base64,';
+        s += '<label class="form-check-label" id="L' + index + '"' + 'for="' + index + '"><img src="data:image/png;base64,';
         s += icon + '"/>&nbsp ' + name + '</label></div>';
 
         if (index >= (mainFontsLength - 1)) {
@@ -1260,10 +1291,10 @@ const char gFontsPage[] = R"=====(
     function createSecFontEntry(json ) {
       let s = "";
       for (let i = 0; (i < secFontsPerTx); i++) {
-        let name = json.SFTABLE[i].FONTNAME;
+        let name = json.SFTABLE[i].FONT_NAME;
         let checked = json.SFTABLE[i].CHECKED;
         let icon = json.SFTABLE[i].ICON;
-        let index = json.SFTABLE[i].INDEX;
+        let index = json.SFTABLE[i].FONT_INDEX;
 
         s += '<div class="form-check col-sm-6">'
         s += '<input class="form-check-input" type="radio" name="secFont" id="s' + index + '" ' + checked + '">';
@@ -1279,7 +1310,7 @@ const char gFontsPage[] = R"=====(
 
 
     function createMainFonts(xhttp) {
-      if (secFontsLength == 0) {
+      if (mainFontsLength == 0) {
         setTimeout(createMainFonts, 25);
       }
       // Remove all options from font table.
@@ -1308,6 +1339,11 @@ const char gFontsPage[] = R"=====(
 
       // WEB ID
       document.getElementById("idWebId").innerText = json.WEB_ID;
+      document.getElementById("idFontPeriod").value = json.FONT_PERIOD;
+      document.getElementById("idCurrentFont").innerHTML =
+        'Current Main Font: <span class="text-danger">' + json.FONT_NAME + '</span>';
+      curFontIndex = json.FONT_INDEX;
+      ColorCurrentFont();
       mainFontsPerTx = json.NUM_MAIN_FONTS_PER_TX;
       mainFontsLength = json.NUM_MAIN_FONTS;
       secFontsPerTx = json.NUM_SEC_FONTS_PER_TX;
@@ -1319,6 +1355,7 @@ const char gFontsPage[] = R"=====(
       console.log(json);
     }
 
+    // Check all main font boxes.
     function setAll() {
       const boxes = document.querySelectorAll('input[type="checkbox"]');
 
@@ -1328,6 +1365,7 @@ const char gFontsPage[] = R"=====(
       putFontData();
     }
 
+    // Clear all main font boxes except the first one.
     function clearAll() {
       const boxes = document.querySelectorAll('input[type="checkbox"]');
 
@@ -1338,6 +1376,65 @@ const char gFontsPage[] = R"=====(
         }
       });
       putFontData();
+    }
+
+    // Update/refresh the current font.
+    function refreshCurrentFont() {
+      loadDoc("/refreshCurrentFont", updateCurrentFont);
+    }
+
+    // Bump to the previous active main font.
+    function prevFont() {
+      loadDoc("/setPrevFont", updateCurrentFont);
+    }
+
+    // Bump to the next active main font.
+    function nextFont() {
+      loadDoc("/setNextFont", updateCurrentFont);
+    }
+
+    // Show the currently displayed font in red.
+    function ColorCurrentFont() {
+      const labels = document.getElementsByClassName('form-check-label');
+      for (const l of labels) {
+        if (l.id == "L" + curFontIndex) {
+          l.style.color = "red";
+        }
+        else {
+          l.style.color = "black";
+          }
+      }
+    }
+
+    // Update the current font.
+    function updateCurrentFont(xhttp) {
+      let json = JSON.parse(xhttp.responseText);
+
+      // WEB ID
+      document.getElementById("idCurrentFont").innerHTML =
+        'Current Main Font: <span class="text-danger">' + json.FONT_NAME + '</span>';
+      curFontIndex = json.FONT_INDEX;
+      ColorCurrentFont();
+
+      // Options buttons.
+      console.log(json);
+    }
+
+    function putFontPeriod() {
+      if (msgInProcess) {
+        setTimeout(putFontPeriod, 25);
+      }
+      else {
+        msgInProcess = true;
+
+        let period = document.getElementById("idFontPeriod").value;
+
+        let optionsData = {
+          fontPeriod : period
+        };
+
+        putFormData("/updateFontPeriod", optionsData, null);
+      }
     }
 
   </script>
