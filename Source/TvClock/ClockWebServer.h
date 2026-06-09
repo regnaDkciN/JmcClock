@@ -9,6 +9,8 @@
 *
 * History:
 *   09-JUN-2026 JMC
+*      Optimized current font display.
+*   09-JUN-2026 JMC
 *      - Added missing font cycling period setting.
 *      - Added next font and previous font selection buttons.
 *      - Added current font update.
@@ -1156,7 +1158,7 @@ const char gFontsPage[] = R"=====(
     let mainFontsPerTx = 0;
     let secFontsLength = 0;
     let secFontsPerTx = 0;
-    let curFontIndex = 0;
+    let curFontIndex = 999;
 
     // Start the main page.  It will continue on its own.
     (function triggerMainPage() {
@@ -1342,8 +1344,6 @@ const char gFontsPage[] = R"=====(
       document.getElementById("idFontPeriod").value = json.FONT_PERIOD;
       document.getElementById("idCurrentFont").innerHTML =
         'Current Main Font: <span class="text-danger">' + json.FONT_NAME + '</span>';
-      curFontIndex = json.FONT_INDEX;
-      ColorCurrentFont();
       mainFontsPerTx = json.NUM_MAIN_FONTS_PER_TX;
       mainFontsLength = json.NUM_MAIN_FONTS;
       secFontsPerTx = json.NUM_SEC_FONTS_PER_TX;
@@ -1394,15 +1394,18 @@ const char gFontsPage[] = R"=====(
     }
 
     // Show the currently displayed font in red.
-    function ColorCurrentFont() {
-      const labels = document.getElementsByClassName('form-check-label');
-      for (const l of labels) {
-        if (l.id == "L" + curFontIndex) {
-          l.style.color = "red";
-        }
-        else {
-          l.style.color = "black";
+    function SetCurrentFont(newIndex) {
+      if (curFontIndex != newIndex) {
+        curFontIndex = newIndex;
+        const labels = document.getElementsByClassName('form-check-label');
+        for (const l of labels) {
+          if (l.id == "L" + curFontIndex) {
+            l.style.color = "red";
           }
+          else {
+            l.style.color = "black";
+            }
+        }
       }
     }
 
@@ -1413,8 +1416,8 @@ const char gFontsPage[] = R"=====(
       // WEB ID
       document.getElementById("idCurrentFont").innerHTML =
         'Current Main Font: <span class="text-danger">' + json.FONT_NAME + '</span>';
-      curFontIndex = json.FONT_INDEX;
-      ColorCurrentFont();
+      let newFontIndex = json.FONT_INDEX;
+      SetCurrentFont(newFontIndex);
 
       // Options buttons.
       console.log(json);
