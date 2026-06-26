@@ -11,6 +11,8 @@
 *   - An indication of when the clock is offline.
 *
 * History:
+*   26-JUN-2026 JMC
+*      Fixed 12-hour 12AM display.  Was displaying 00 at midnight.  Changed to 12.
 *   16-JAN-2026 JMC
 *      Start.
 *
@@ -143,9 +145,12 @@ void TimeDisplay::DisplayTime()
         // adjust our time data here.
         // Adjust based on 12 or 24 hour format.
         uint16_t currentHour = timeinfo.tm_hour;
-        if (m_12Hour && (currentHour > 12))
+        if (m_12Hour)
         {
-            currentHour -= 12;
+            if (currentHour > 12)
+            {
+                currentHour -= 12;
+            }
             if (currentHour == 0)
             {
                 currentHour = 12;

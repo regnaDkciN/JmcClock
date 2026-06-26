@@ -8,6 +8,9 @@
 *       any of this code as a basis for anything useful.
 *
 * History:
+*   26-JUN-2026 JMC
+*      - Removed unused JS lines.
+*      - Changed Fonts page timeouts from 25ms to 250ms.
 *   09-JUN-2026 JMC
 *      Optimized current font display.
 *   09-JUN-2026 JMC
@@ -158,9 +161,6 @@ const char gRootPage[] = R"=====(
           if (this.readyState == 4) {
             if (this.status == 200) {
               cFunction(this);
-            }
-            else {
-              //setTimeout(unlockOptions, 25);
             }
             msgInProcess = false;
           }
@@ -386,9 +386,6 @@ const char gTimeScreenOptsPage[] = R"=====(
           if (this.readyState == 4) {
             if (this.status == 200) {
               cFunction(this);
-            }
-            else {
-              //setTimeout(unlockOptions, 25);
             }
             msgInProcess = false;
           }
@@ -698,9 +695,6 @@ const char gClockColorsPage[] = R"=====(
             if (this.status == 200) {
               cFunction(this);
             }
-            else {
-              //setTimeout(unlockOptions, 25);
-            }
             msgInProcess = false;
           }
         };
@@ -914,9 +908,6 @@ const char gTimezonePage[] = R"=====(
           if (this.readyState == 4) {
             if (this.status == 200) {
               cFunction(this);
-            }
-            else {
-              //setTimeout(unlockOptions, 25);
             }
             msgInProcess = false;
           }
@@ -1183,9 +1174,6 @@ const char gFontsPage[] = R"=====(
             if (this.status == 200) {
               cFunction(this);
             }
-            else {
-              //setTimeout(unlockOptions, 25);
-            }
             msgInProcess = false;
           }
         };
@@ -1240,7 +1228,7 @@ const char gFontsPage[] = R"=====(
 
     function putFontData() {
       if (msgInProcess) {
-        setTimeout(putFontData, 25);
+        setTimeout(putFontData, 250);
       }
       else {
         msgInProcess = true;
@@ -1313,7 +1301,7 @@ const char gFontsPage[] = R"=====(
 
     function createMainFonts(xhttp) {
       if (mainFontsLength == 0) {
-        setTimeout(createMainFonts, 25);
+        setTimeout(createMainFonts, 250);
       }
       // Remove all options from font table.
       document.getElementById("idMainFonts").innerHTML = '';
@@ -1325,7 +1313,7 @@ const char gFontsPage[] = R"=====(
 
     function createSecFonts(xhttp) {
       if (secFontsLength == 0) {
-        setTimeout(createSecFonts, 25);
+        setTimeout(createSecFonts, 250);
       }
       // Remove all options from font table.
       document.getElementById("idSecFonts").innerHTML = '';
@@ -1425,7 +1413,7 @@ const char gFontsPage[] = R"=====(
 
     function putFontPeriod() {
       if (msgInProcess) {
-        setTimeout(putFontPeriod, 25);
+        setTimeout(putFontPeriod, 250);
       }
       else {
         msgInProcess = true;
@@ -1544,9 +1532,6 @@ const char gWifiPage[] = R"=====(
           if (this.readyState == 4) {
             if (this.status == 200) {
               cFunction(this);
-            }
-            else {
-              //setTimeout(unlockOptions, 25);
             }
             msgInProcess = false;
           }
@@ -1748,9 +1733,6 @@ const char gNvsPage[] = R"=====(
         if (this.readyState == 4) {
           if (this.status == 200) {
             cFunction(this);
-          }
-          else {
-            //setTimeout(unlockOptions, 25);
           }
           msgInProcess = false;
         }
