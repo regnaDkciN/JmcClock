@@ -8,6 +8,8 @@
 *       any of this code as a basis for anything useful.
 *
 * History:
+*   28-JUN-2026 JMC
+*      - Renamed server from JmcClock to TVClock.
 *   26-JUN-2026 JMC
 *      - Removed unused JS lines.
 *      - Changed Fonts page timeouts from 25ms to 250ms.
@@ -60,7 +62,7 @@ const char gRootPage[] = R"=====(
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>JMC Clock Settings</title>
+    <title>TV Clock Settings</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -69,8 +71,8 @@ const char gRootPage[] = R"=====(
   <body id="idBody" hidden>
 
     <div class="p-1 bg-primary text-white text-center">
-      <h1>JMC Clock Settings</h1>
-      <p id="idWebId">JmcClock</p>
+      <h1>TV Clock Settings</h1>
+      <p id="idWebId">TVClock</p>
     </div>
 
     <nav class="navbar nav-tabs navbar-expand-sm border-0">
@@ -239,7 +241,7 @@ const char gTimeScreenOptsPage[] = R"=====(
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>JMC Clock Settings</title>
+    <title>TV Clock Settings</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -253,8 +255,8 @@ const char gTimeScreenOptsPage[] = R"=====(
   <body id="idBody" hidden>
 
     <div class="p-1 bg-primary text-white text-center">
-      <h1>JMC Clock Settings</h1>
-      <p id="idWebId">JmcClock</p>
+      <h1>TV Clock Settings</h1>
+      <p id="idWebId">TVClock</p>
     </div>
 
     <nav class="navbar nav-tabs navbar-expand-sm border-0">
@@ -531,7 +533,7 @@ const char gClockColorsPage[] = R"=====(
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>JMC Clock Settings</title>
+    <title>TV Clock Settings</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -539,8 +541,8 @@ const char gClockColorsPage[] = R"=====(
   <body id="idBody" hidden>
 
     <div class="p-1 bg-primary text-white text-center">
-      <h1>JMC Clock Settings</h1>
-      <p id="idWebId">JmcClock</p>
+      <h1>TV Clock Settings</h1>
+      <p id="idWebId">TVClock</p>
     </div>
 
     <nav class="navbar nav-tabs navbar-expand-sm border-0">
@@ -808,7 +810,7 @@ const char gTimezonePage[] = R"=====(
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>JMC Clock Settings</title>
+    <title>TV Clock Settings</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -816,8 +818,8 @@ const char gTimezonePage[] = R"=====(
   <body id="idBody" hidden>
 
     <div class="p-1 bg-primary text-white text-center">
-      <h1>JMC Clock Settings</h1>
-      <p id="idWebId">JmcClock</p>
+      <h1>TV Clock Settings</h1>
+      <p id="idWebId">TVClock</p>
     </div>
 
     <nav class="navbar nav-tabs navbar-expand-sm border-0">
@@ -1051,7 +1053,7 @@ const char gFontsPage[] = R"=====(
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>JMC Clock Settings</title>
+    <title>TV Clock Settings</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -1067,8 +1069,8 @@ const char gFontsPage[] = R"=====(
   <body id="idBody" hidden>
 
     <div class="p-1 bg-primary text-white text-center">
-      <h1>JMC Clock Settings</h1>
-      <p id="idWebId">JmcClock</p>
+      <h1>TV Clock Settings</h1>
+      <p id="idWebId">TVClock</p>
     </div>
 
     <nav class="navbar nav-tabs navbar-expand-sm border-0">
@@ -1443,7 +1445,7 @@ const char gWifiPage[] = R"=====(
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>JMC Clock Settings</title>
+    <title>TV Clock Settings</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -1452,8 +1454,8 @@ const char gWifiPage[] = R"=====(
   <body id="idBody" hidden>
 
     <div class="p-1 bg-primary text-white text-center">
-      <h1>JMC Clock Settings</h1>
-      <p id="idWebId">JmcClock</p>
+      <h1>TV Clock Settings</h1>
+      <p id="idWebId">TVClock</p>
     </div>
 
     <nav class="navbar nav-tabs navbar-expand-sm border-0">
@@ -1611,7 +1613,7 @@ const char gNvsPage[] = R"=====(
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>JMC Clock Settings</title>
+    <title>TV Clock Settings</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -1620,8 +1622,8 @@ const char gNvsPage[] = R"=====(
   <body id="idBody" hidden>
 
     <div class="p-1 bg-primary text-white text-center">
-      <h1>JMC Clock Settings</h1>
-      <p id="idWebId">JmcClock</p>
+      <h1>TV Clock Settings</h1>
+      <p id="idWebId">TVClock</p>
     </div>
 
     <nav class="navbar nav-tabs navbar-expand-sm border-0">
